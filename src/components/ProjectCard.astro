@@ -6,50 +6,187 @@ interface Props {
 }
 
 const { item } = Astro.props;
+
+type LinkKind = 'github' | 'file' | 'external';
+
+const linkKind: LinkKind = (() => {
+  if (!item.link) return 'external';
+  const href = item.link.href.toLowerCase();
+  const label = item.link.label.toLowerCase();
+  if (href.includes('github.com') || label.includes('github')) return 'github';
+  if (
+    label.includes('file') ||
+    label.includes('pdf') ||
+    label.includes('certificate') ||
+    href.includes('drive.google.com') ||
+    href.endsWith('.pdf')
+  ) {
+    return 'file';
+  }
+  return 'external';
+})();
+
+const STROKE_LINK_ICONS: Record<
+  Exclude<LinkKind, 'github'>,
+  { circles?: Array<{ cx: string; cy: string; r: string }>; paths: string[] }
+> = {
+  file: {
+    paths: [
+      'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z',
+      'M14 2v4a2 2 0 0 0 2 2h4',
+      'M10 9H8',
+      'M16 13H8',
+      'M16 17H8',
+    ],
+  },
+  external: {
+    circles: [{ cx: '12', cy: '12', r: '10' }],
+    paths: [
+      'M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20',
+      'M2 12h20',
+    ],
+  },
+};
 ---
 
-<article class="container px-4 mx-auto my-10 shadow-2xl rounded-2xl">
-  <div class="flex flex-col items-center gap-10 p-10 md:flex-row md:items-start">
-    <img
-      src={item.image}
-      alt={item.imageAlt}
-      loading={item.lazy ? 'lazy' : undefined}
-      class="w-64 md:w-[300px] shrink-0 shadow-lg rounded-3xl"
+<div class="w-full max-w-5xl px-4 mx-auto mb-6 sm:mb-8 last:mb-12">
+  <article
+    class="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm shadow-slate-200/70 transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-slate-200/80 motion-safe:hover:-translate-y-0.5 sm:p-6 md:p-7"
+  >
+    <div
+      aria-hidden="true"
+      class="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-blue-600 via-sky-500 to-blue-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
     />
 
-    <div class="text-center md:text-left">
-      <h3 class="mb-4 text-2xl font-bold md:text-3xl">{item.title}</h3>
+    <div class="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
+      <div
+        class="relative aspect-[7/5] w-full shrink-0 overflow-hidden rounded-xl border border-slate-200/80 bg-linear-to-br from-slate-50 via-slate-100/80 to-blue-50/40 md:w-[340px] lg:w-[370px]"
+      >
+        <div class="absolute inset-3 flex items-center justify-center">
+          <img
+            src={item.image}
+            alt={item.imageAlt}
+            loading={item.lazy ? 'lazy' : undefined}
+            decoding="async"
+            class="max-h-full max-w-full rounded-lg object-contain shadow-sm ring-1 ring-slate-900/5 transition-transform duration-300 motion-safe:group-hover:scale-[1.02]"
+          />
+        </div>
+      </div>
 
-      <div class="space-y-3 text-base text-gray-700 md:text-lg">
-        {item.summary && <p>{item.summary}</p>}
+      <div class="flex flex-1 flex-col justify-center text-left">
+        <div class="space-y-3.5">
+          <div>
+            <h3 class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+              {item.title}
+            </h3>
+            <div
+              aria-hidden="true"
+              class="mt-2.5 h-0.5 w-10 rounded-full bg-linear-to-r from-blue-600 to-sky-400 transition-all duration-300 group-hover:w-16"
+            />
+          </div>
 
-        {item.role && (
-          <p>
-            <span class="font-semibold">Role:</span> {item.role}
-          </p>
-        )}
+          {item.summary && (
+            <p class="text-sm leading-relaxed text-slate-600 sm:text-base">
+              {item.summary}
+            </p>
+          )}
 
-        {item.bullets && (
-          <ul class="inline-block pl-5 space-y-2 text-left list-disc md:block">
-            {item.bullets.map((bullet) => (
-              <li>{bullet}</li>
-            ))}
-          </ul>
-        )}
+          {item.role && (
+            <div class="rounded-xl border border-slate-200/80 bg-slate-50/80 px-4 py-3 text-sm leading-relaxed text-slate-700">
+              <span class="mr-1.5 inline-flex items-center gap-1.5 font-semibold text-slate-900">
+                <svg
+                  class="h-4 w-4 shrink-0 text-blue-600"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                  <rect width="20" height="14" x="2" y="6" rx="2" />
+                </svg>
+                Role:
+              </span>
+              <span>{item.role}</span>
+            </div>
+          )}
+
+          {item.bullets && item.bullets.length > 0 && (
+            <ul class="space-y-2.5 text-sm leading-relaxed text-slate-600 sm:text-base">
+              {item.bullets.map((bullet) => (
+                <li class="flex items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600 ring-4 ring-blue-50 sm:mt-2.5"
+                  />
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         {item.link && (
-          <p class="pt-2">
+          <div class="mt-5 pt-1">
             <a
               href={item.link.href}
-              class="underline"
               target="_blank"
               rel="noopener noreferrer"
+              class="group/link inline-flex items-center gap-2 rounded-full border border-blue-200/80 bg-blue-50/70 px-4 py-2 text-sm font-semibold text-blue-700 transition-all duration-200 hover:border-blue-600 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:shadow-blue-600/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
-              {item.link.label}
+              {linkKind === 'github' ? (
+                <svg
+                  class="h-4 w-4 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  class="h-4 w-4 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  {STROKE_LINK_ICONS[linkKind].circles?.map((circle) => (
+                    <circle cx={circle.cx} cy={circle.cy} r={circle.r} />
+                  ))}
+                  {STROKE_LINK_ICONS[linkKind].paths.map((d) => (
+                    <path d={d} />
+                  ))}
+                </svg>
+              )}
+              <span>{item.link.label}</span>
+              <svg
+                class="h-3.5 w-3.5 shrink-0 transition-transform duration-200 motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M7 17 17 7" />
+                <path d="M7 7h10v10" />
+              </svg>
+              <span class="sr-only"> (opens in a new tab)</span>
             </a>
-          </p>
+          </div>
         )}
       </div>
     </div>
-  </div>
-</article>
+  </article>
+</div>
