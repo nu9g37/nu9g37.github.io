@@ -4,56 +4,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setthawut Jitsom</title>
+  <title>Contact | Setthawut Jitsom</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="font-sans">
   <!-- Navigation Bar -->
-  <nav>
-    <div class="flex flex-wrap justify-center p-3 text-center bg-blue-300">
+  <header>
+    <nav aria-label="Primary navigation" class="flex flex-wrap justify-center p-3 text-center bg-blue-300">
       <a href="index.html" class="p-2 ml-5 mr-5 rounded-2xl hover:bg-blue-500 hover:shadow-xl">Home</a>
       <!-- <a href="project.html" class="p-2 ml-5 mr-5 rounded-2xl hover:bg-blue-500 hover:shadow-xl">Project</a> -->
-      <a href="contact.html" class="p-2 ml-5 mr-5 rounded-2xl hover:bg-blue-500 hover:shadow-xl">Contact</a>
-    </div>
+      <a href="contact.html" aria-current="page" class="p-2 ml-5 mr-5 rounded-2xl hover:bg-blue-500 hover:shadow-xl">Contact</a>
+    </nav>
+  </header>
+
+  <main>
     <h1 class="mt-10 text-3xl font-bold text-center">CONTACT</h1>
-  </nav>
 
-  <!-- Container -->
-  <div class="container px-4 mx-auto mt-10">
-    <div class="flex flex-col items-center justify-center gap-10 pb-10 md:flex-row">
+    <!-- Container -->
+    <div class="container px-4 mx-auto mt-10">
+      <div class="flex flex-col items-center justify-center gap-10 pb-10 md:flex-row">
 
-      <!-- Picture -->
-      <img src="Image/pun-square.png" class="w-64 md:w-[300px] shadow-lg rounded-3xl">
+        <!-- Picture -->
+        <img src="Image/pun-square.png" alt="Portrait of Setthawut Jitsom" class="w-64 md:w-[300px] shrink-0 shadow-lg rounded-3xl">
 
-      <!-- Info -->
-      <div class="text-center md:text-left">
-        <h1 class="mb-4 text-2xl font-bold md:text-4xl">Setthawut Jitsom (Pun)</h1>
-        <div class="space-y-3 text-base text-gray-700 md:text-lg">
-          <p class="font-semibold">Computer Engineering and Digital Technology Student</p>
-          <p>Faculty of Engineering, Chulalongkorn University</p>
+        <!-- Info -->
+        <div class="text-center md:text-left">
+          <h2 class="mb-4 text-2xl font-bold md:text-4xl">Setthawut Jitsom (Pun)</h2>
+          <div class="space-y-3 text-base text-gray-700 md:text-lg">
+            <p class="font-semibold">Computer Engineering and Digital Technology Student</p>
+            <p>Faculty of Engineering, Chulalongkorn University</p>
 
-          <div class="pt-4">
-            <p class="font-bold">Tel : <span class="font-normal">(+66) 81 161 9182</span></p>
-            <p class="font-bold">Email : <span class="font-normal">nu9g37@gmail.com</span></p>
-            <p class="font-bold">LineID : <span class="font-normal">pun310849</span></p>
+            <div class="pt-4 space-y-1">
+              <p><span class="font-bold">Tel:</span> <a href="tel:+66811619182" class="hover:underline">(+66) 81 161 9182</a></p>
+              <p><span class="font-bold">Email:</span> <a href="mailto:nu9g37@gmail.com" class="hover:underline">nu9g37@gmail.com</a></p>
+              <p><span class="font-bold">Line ID:</span> pun310849</p>
+            </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
-  </div>
-  <span class="flex justify-center mb-10">
-    <a href="https://www.facebook.com/Nu9g37.Pun/" class="ml-3 mr-3">
-      <img src="Image/facebook-logo.png" style="width: 40px;">
-    </a>
-    <a href="https://github.com/nu9g37" class="ml-3 mr-3">
-      <img src="Image/github-logo.png" style="width: 40px;">
-    </a>
-    <a href="https://www.linkedin.com/in/setthawut-jitsom-4603b4392/" class="ml-3 mr-3">
-      <img src="Image/linkedin-logo.png" style="width: 40px;">
-    </a>
-  </span>
+
+    <div class="flex justify-center gap-6 mb-10">
+      <a href="https://www.facebook.com/Nu9g37.Pun/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <img src="Image/facebook-logo.png" alt="Facebook" class="w-10 h-10 object-contain">
+      </a>
+      <a href="https://github.com/nu9g37" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <img src="Image/github-logo.png" alt="GitHub" class="w-10 h-10 object-contain">
+      </a>
+      <a href="https://www.linkedin.com/in/setthawut-jitsom-4603b4392/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <img src="Image/linkedin-logo.png" alt="LinkedIn" class="w-10 h-10 object-contain">
+      </a>
+    </div>
+  </main>
 </body>
 
 </html>
