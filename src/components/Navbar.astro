@@ -1,28 +1,95 @@
 ---
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/contact', label: 'Contact' },
+import { PROFILE } from '../data/portfolio';
+
+type NavIcon = 'home' | 'contact';
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: NavIcon;
+}
+
+const navItems: NavItem[] = [
+  { href: '/', label: 'Home', icon: 'home' },
+  { href: '/contact', label: 'Contact', icon: 'contact' },
 ];
 
+const ICON_PATHS: Record<NavIcon, string[]> = {
+  home: [
+    'M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8',
+    'M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+  ],
+  contact: [
+    'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+    'm22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7',
+  ],
+};
+
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+const nameParts = PROFILE.name.split(/\s+/).filter(Boolean);
+const initials = nameParts
+  .slice(0, 2)
+  .map((part) => part[0]?.toUpperCase() ?? '')
+  .join('');
+const [firstName = PROFILE.name, ...restNames] = nameParts;
+const remainingName = restNames.join(' ');
 ---
 
-<header>
-  <nav aria-label="Primary navigation" class="flex flex-wrap justify-center p-3 text-center bg-blue-300">
-    {navItems.map((item) => {
-      const isActive = currentPath === item.href;
-      return (
-        <a
-          href={item.href}
-          aria-current={isActive ? 'page' : undefined}
-          class:list={[
-            'p-2 ml-5 mr-5 rounded-2xl transition hover:bg-blue-500 hover:shadow-xl',
-            isActive && 'bg-blue-400/70 font-semibold',
-          ]}
-        >
-          {item.label}
-        </a>
-      );
-    })}
-  </nav>
+<header class="sticky top-0 z-50 border-b shadow-xs border-slate-200/80 bg-white/85 backdrop-blur-md">
+  <div class="container flex items-center justify-center h-16 gap-4 px-4 mx-auto">
+    {/*<a
+      href="/"
+      aria-label={`${PROFILE.name} — Home`}
+      class="group flex items-center gap-2.5 rounded-xl px-1.5 py-1 text-slate-900 transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+    >
+      <span
+        aria-hidden="true"
+        class="flex items-center justify-center text-sm font-bold tracking-tight text-white transition-transform duration-200 shadow-sm h-9 w-9 shrink-0 rounded-xl bg-linear-to-br from-blue-600 to-sky-500 shadow-blue-600/25 group-hover:scale-105"
+      >
+        {initials}
+      </span>
+      <span class="text-base font-bold tracking-tight sm:text-lg">
+        {firstName}
+        {remainingName && <span class="hidden sm:inline"> {remainingName}</span>}
+      </span>
+    </a>*/}
+
+    <nav
+      aria-label="Primary navigation"
+      class="flex items-center gap-1 p-1 border rounded-full border-slate-200/80 bg-slate-100/80"
+    >
+      {navItems.map((item) => {
+        const isActive = currentPath === item.href;
+        return (
+          <a
+            href={item.href}
+            aria-current={isActive ? 'page' : undefined}
+            class:list={[
+              'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:px-4',
+              isActive
+                ? 'bg-blue-600 font-semibold text-white shadow-sm shadow-blue-600/25'
+                : 'font-medium text-slate-600 hover:bg-white hover:text-slate-900',
+            ]}
+          >
+            <svg
+              class="hidden w-4 h-4 shrink-0 sm:block"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              {ICON_PATHS[item.icon].map((d) => (
+                <path d={d} />
+              ))}
+            </svg>
+            <span>{item.label}</span>
+          </a>
+        );
+      })}
+    </nav>
+  </div>
 </header>

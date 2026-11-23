@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 
@@ -19,6 +20,7 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <Font cssVariable="--font-roboto" preload={[{ style: 'normal' }]} />
     <title>{title}</title>
   </head>
   <body class="font-sans">
