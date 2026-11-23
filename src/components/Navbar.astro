@@ -1,0 +1,28 @@
+---
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+---
+
+<header>
+  <nav aria-label="Primary navigation" class="flex flex-wrap justify-center p-3 text-center bg-blue-300">
+    {navItems.map((item) => {
+      const isActive = currentPath === item.href;
+      return (
+        <a
+          href={item.href}
+          aria-current={isActive ? 'page' : undefined}
+          class:list={[
+            'p-2 ml-5 mr-5 rounded-2xl transition hover:bg-blue-500 hover:shadow-xl',
+            isActive && 'bg-blue-400/70 font-semibold',
+          ]}
+        >
+          {item.label}
+        </a>
+      );
+    })}
+  </nav>
+</header>

@@ -1,0 +1,55 @@
+---
+import type { PortfolioItem } from '../data/portfolio';
+
+interface Props {
+  item: PortfolioItem;
+}
+
+const { item } = Astro.props;
+---
+
+<article class="container px-4 mx-auto my-10 shadow-2xl rounded-2xl">
+  <div class="flex flex-col items-center gap-10 p-10 md:flex-row md:items-start">
+    <img
+      src={item.image}
+      alt={item.imageAlt}
+      loading={item.lazy ? 'lazy' : undefined}
+      class="w-64 md:w-[300px] shrink-0 shadow-lg rounded-3xl"
+    />
+
+    <div class="text-center md:text-left">
+      <h3 class="mb-4 text-2xl font-bold md:text-3xl">{item.title}</h3>
+
+      <div class="space-y-3 text-base text-gray-700 md:text-lg">
+        {item.summary && <p>{item.summary}</p>}
+
+        {item.role && (
+          <p>
+            <span class="font-semibold">Role:</span> {item.role}
+          </p>
+        )}
+
+        {item.bullets && (
+          <ul class="inline-block pl-5 space-y-2 text-left list-disc md:block">
+            {item.bullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+        )}
+
+        {item.link && (
+          <p class="pt-2">
+            <a
+              href={item.link.href}
+              class="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {item.link.label}
+            </a>
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+</article>
